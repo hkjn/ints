@@ -1,4 +1,4 @@
-// Package ints provides some utilities around ints.
+// Package ints provides some utilities for ints.
 package ints
 
 import (
@@ -6,26 +6,38 @@ import (
 	"strconv"
 )
 
-// Parse is a simple wrapper around strconv.ParseInt.
-//
-// Parse considers "" to be 0.
-func Parse(s string) (v int, err error) {
-	if s == "" {
-		// Special-case: consider empty string to be 0.
-		v = 0
-	} else {
-		v64, err := strconv.ParseInt(s, 10, 0)
+// ParseStrings parses multiple strings as int.
+func ParseStrings(in ...string) ([]int, error) {
+	result := make([]int, len(in))
+	for i, s := range in {
+		r, err := Parse(s)
 		if err != nil {
-			return -1, err
+			return []int{}, err
 		}
-		v = int(v64)
+		result[i] = r
 	}
-	return
+	return result, nil
+}
+
+// Parse is a simple wrapper around strconv.ParseInt.
+func Parse(s string) (int, error) {
+	v64, err := strconv.ParseInt(s, 10, 0)
+	if err != nil {
+		return -1, err
+	}
+	return int(v64), nil
+}
+
+// ParseWithDefault is like Parse but considers "" to be 0.
+func ParseWithDefault(s string) (int, error) {
+	if s == "" {
+		return 0, nil
+	} else {
+		return Parse(s)
+	}
 }
 
 // ParseBetween parses a string to int within an inclusive interval.
-//
-// ParseBetween considers "" to be 0.
 func ParseBetween(s string, min, max int) (v int, err error) {
 	v, err = Parse(s)
 	if err != nil {
@@ -44,4 +56,12 @@ func ParseBetween(s string, min, max int) (v int, err error) {
 		return
 	}
 	return
+}
+
+// ParseBetweenWithDefault is like ParseBetween but considers "" to be 0.
+func ParseBetweenWithDefault(s string, min, max int) (v int, err error) {
+	if s == "" {
+		s = "0"
+	}
+	return ParseBetween(s, min, max)
 }

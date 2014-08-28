@@ -28,10 +28,10 @@ func Parse(s string) (int, error) {
 	return int(v64), nil
 }
 
-// ParseWithDefault is like Parse but considers "" to be 0.
-func ParseWithDefault(s string) (int, error) {
+// ParseWithDefault is like Parse but considers "" to be default value.
+func ParseWithDefault(s string, def int) (int, error) {
 	if s == "" {
-		return 0, nil
+		return def, nil
 	} else {
 		return Parse(s)
 	}

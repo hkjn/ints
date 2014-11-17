@@ -1,5 +1,5 @@
 // Package ints provides some utilities for ints.
-package ints
+package ints // import "hkjn.me/ints"
 
 import (
 	"fmt"
